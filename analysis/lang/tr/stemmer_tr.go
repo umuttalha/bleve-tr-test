@@ -15,6 +15,8 @@
 package tr
 
 import (
+	"fmt"
+
 	"github.com/blevesearch/bleve/v2/analysis"
 	"github.com/blevesearch/bleve/v2/registry"
 
@@ -32,11 +34,25 @@ func NewTurkishStemmerFilter() *TurkishStemmerFilter {
 }
 
 func (s *TurkishStemmerFilter) Filter(input analysis.TokenStream) analysis.TokenStream {
+
 	for _, token := range input {
+
+		// buradan string(token.Term) alıp grpc ye yolla
+
+		fmt.Print(string(token.Term))
+		fmt.Print("\n")
+
 		env := snowballstem.NewEnv(string(token.Term))
 		turkish.Stem(env)
+
+		// buradan outputu alıp env.SetCurrent("asd") ile set et
+
+		fmt.Print(env.Current())
+		fmt.Print("\n")
+
 		token.Term = []byte(env.Current())
 	}
+
 	return input
 }
 
